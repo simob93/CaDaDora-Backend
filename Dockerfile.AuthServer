@@ -1,0 +1,28 @@
+# Step 1 - The Build Environment #
+
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+WORKDIR /app
+EXPOSE 80
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
+COPY ["src/CaDaDora.AuthServer/CaDaDora.AuthServer.csproj", "CaDaDora.AuthServer/"]
+COPY ["src/CaDaDora.EntityFrameworkCore/CaDaDora.EntityFrameworkCore.csproj", "CaDaDora.EntityFrameworkCore/"]
+COPY ["src/CaDaDora.Domain/CaDaDora.Domain.csproj", "CaDaDora.Domain/"]
+COPY ["src/CaDaDora.Domain.Shared/CaDaDora.Domain.Shared.csproj", "CaDaDora.Domain.Shared/"]
+RUN dotnet restore "CaDaDora.AuthServer/CaDaDora.AuthServer.csproj"
+
+WORKDIR ..
+
+COPY . .
+
+RUN dotnet build "src/CaDaDora.AuthServer/CaDaDora.AuthServer.csproj" -c Release -o /app/build
+
+
+FROM build AS publish
+RUN dotnet publish "src/CaDaDora.AuthServer/CaDaDora.AuthServer.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish  .
+ENTRYPOINT ["dotnet", "CaDaDora.AuthServer.dll"]

@@ -1,0 +1,9 @@
+{
+  "culture": "it",
+  "texts": {
+    "Menu:Home": "Home",
+    "Welcome": "Benvenuto",
+    "CaDaDora:ParametroObbligatorio": "Il Campo {parametro} è obbligatorio",
+    "LongWelcomeMessage": "Benvenuto nell'applicazione. Questo è un progetto di avvio basato sul framework ABP. Per ulteriori informazioni, visita abp.io."
+  }
+}
